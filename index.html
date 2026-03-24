@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construction Work Order | Oness Infra ERP</title>
+    <style>
+        :root {
+            --primary-blue: #1a2a3a;
+            --accent-gold: #c5a059;
+            --light-bg: #f8f9fa;
+            --border: #ced4da;
+            --text-dark: #212529;
+            --highlight: #fffdf5;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 40px 20px;
+            color: var(--text-dark);
+            line-height: 1.4;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .erp-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 50px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 2px solid var(--primary-blue);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: nowrap;
+            min-width: 0;
+            flex: 1 1 auto;
+        }
+
+        .company-logo {
+            width: clamp(56px, 8vw, 90px);
+            height: clamp(56px, 8vw, 90px);
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .logo-text {
+            min-width: 0;
+            flex: 1 1 auto;
+        }
+        .logo-text h1 {
+            margin: 0;
+            font-size: clamp(20px, 3vw, 28px);
+            letter-spacing: 0.8px;
+            color: var(--primary-blue);
+            line-height: 1.15;
+            word-break: break-word;
+        }
+        .logo-text p { margin: 2px 0; font-size: clamp(10px, 1.4vw, 12px); color: #666; font-weight: bold; }
+
+        .wo-header-info { text-align: right; }
+        .wo-no-box {
+            background: var(--primary-blue);
+            color: white;
+            padding: 8px 15px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .wo-no-print {
+            display: none;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-block {
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .info-block h3 {
+            margin: -15px -15px 15px -15px;
+            background: #f1f3f5;
+            padding: 8px 15px;
+            font-size: 13px;
+            border-bottom: 1px solid var(--border);
+            color: var(--primary-blue);
+        }
+
+        .form-row {
+            display: flex;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .form-row label {
+            width: 130px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #777;
+            text-transform: uppercase;
+        }
+
+        .form-row input, .form-row select {
+            flex: 1;
+            border: none;
+            border-bottom: 1px solid #eee;
+            padding: 4px 0;
+            font-size: 13px;
+            font-weight: 600;
+            background: transparent;
+        }
+
+        .print-only-value {
+            display: none;
+            flex: 1;
+            padding: 4px 0;
+            font-size: 13px;
+            font-weight: 600;
+            background: transparent;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section-title {
+            background: var(--primary-blue);
+            color: white;
+            padding: 8px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        table th {
+            background: #e9ecef;
+            border: 1px solid var(--border);
+            padding: 10px;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        table td {
+            border: 1px solid var(--border);
+            padding: 8px;
+        }
+
+        table input { width: 100%; border: none; font-size: 13px; background: transparent; }
+
+        /* Scope & Terms Sections */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .content-box {
+            border: 1px solid var(--border);
+            padding: 15px;
+        }
+
+        .content-box h4 { margin-top: 0; color: var(--primary-blue); border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        
+        .editable-area {
+            outline: none;
+            min-height: 120px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        .editable-area:focus { background: var(--highlight); }
+
+        .signature-area {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        .sig-box {
+            border-top: 1px solid #000;
+            padding-top: 10px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .footer-address {
+            margin-top: 40px;
+            font-size: 10px;
+            color: #888;
+            text-align: center;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .actions {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-add { background: #eee; font-size: 10px; margin-top: 5px; }
+        .btn-print { background: #6c757d; color: white; }
+        .btn-save { background: var(--primary-blue); color: white; }
+        .print-hide { }
+
+        @media print {
+            .actions, .btn-add, .screen-only, .print-hide, #reloadStatus {
+                display: none !important;
+                visibility: hidden !important;
+                height: 0 !important;
+                max-height: 0 !important;
+                overflow: hidden !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border: 0 !important;
+            }
+            body { background: white; padding: 0; margin: 0; }
+            .erp-container {
+                box-shadow: none;
+                border: none;
+                width: 100%;
+                max-width: 100%;
+                padding: 12mm 8mm;
+                margin: 0;
+                overflow: hidden;
+            }
+            .header-top {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                flex-wrap: wrap !important;
+            }
+            .logo-area {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                gap: 18px !important;
+                flex-wrap: wrap !important;
+                min-width: 0;
+            }
+            .logo-text {
+                display: block !important;
+                white-space: normal !important;
+                min-width: 0;
+            }
+            .wo-header-info {
+                text-align: right !important;
+                flex-shrink: 1;
+                min-width: 0;
+            }
+            #displayWONo {
+                display: none !important;
+            }
+            #woDate {
+                display: none !important;
+            }
+            .print-only-value {
+                display: inline-block !important;
+            }
+            .wo-no-print {
+                display: inline !important;
+            }
+            table {
+                table-layout: fixed;
+            }
+            th, td {
+                word-wrap: break-word;
+            }
+            select { appearance: none; border: none !important; }
+        }
+
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .logo-area {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .wo-header-info {
+                width: 100%;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="erp-container">
+    <!-- Header -->
+    <div class="header-top">
+        <div class="logo-area">
+            <img src="img/oness-infra-logo.jpg" alt="Oness Infra Logo" class="company-logo">
+            <div class="logo-text">
+                <h1>ONESS INFRA PRIVATE LIMITED</h1>
+                <p></p>
+            </div>
+        </div>
+        <div class="wo-header-info">
+            <div class="wo-no-box">PO No: <span id="displayWONo">RESI/SITE/PO1/20260319</span><span id="woNoPrint" class="wo-no-print"></span></div>
+            <div class="form-row">
+                <label>Date:</label>
+                <input type="text" id="woDate" readonly style="text-align: right;">
+                <span id="woDatePrint" class="print-only-value"></span>
+            </div>
+            <div class="form-row">
+                <label>Work Type:</label>
+                <select id="workType">
+                    <option value="Without Material">Without Material</option>
+                    <option value="With Material">With Material</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stakeholder Info -->
+    <div class="info-grid">
+        <div class="info-block">
+            <h3>VENDOR / CONTRACTOR DETAILS</h3>
+            <div class="form-row">
+                <label>Vendor Name:</label>
+                <select id="vendorSelect" onchange="autoFillVendor()">
+                    <option value="">-- Select Vendor --</option>
+                </select>
+            </div>
+            <div class="form-row"><label>Code:</label><input type="text" id="vCode" readonly></div>
+            <div class="form-row"><label>Aadhar No:</label><input type="text" id="vAadhar" readonly></div>
+            <div class="form-row"><label>PAN No:</label><input type="text" id="vPan" readonly></div>
+            <div class="form-row"><label>GST No:</label><input type="text" id="vGst" readonly></div>
+        </div>
+        <div class="info-block">
+            <h3>SITE & DELIVERY DETAILS</h3>
+            <div class="form-row">
+                <label>Site Name:</label>
+                <select id="siteSelect" onchange="autoFillSite()">
+                    <option value="">-- Select Site --</option>
+                </select>
+            </div>
+            <div class="form-row"><label>Address:</label><input type="text" id="sDelivered"></div>
+            <div class="form-row"><label>Contact Person:</label><input type="text" id="sContact"></div>
+            <div class="form-row"><label>Mo. No.:</label><input type="text" id="sEngineer"></div>
+        </div>
+    </div>
+
+    <!-- Work Schedule -->
+    <div class="section-title">WORK SCHEDULE & AREA DETAILS</div>
+    <table>
+        <thead>
+            <tr>
+                <th width="5%">S.N.</th>
+                <th>Floor/Location</th>
+                <th>Details of Work</th>
+                <th width="8%">Unit</th>
+                <th width="12%">Area (Sq.Ft)</th>
+                <th width="12%">Rate (₹)</th>
+                <th width="15%">Amount (₹)</th>
+            </tr>
+        </thead>
+        <tbody id="workBody">
+            <tr>
+                <td>1</td>
+                <td><input type="text" value="EXTERNAL PLASTER"></td>
+                <td><input type="text" value="soft"></td>
+                <td><input type="text" value="sqft"></td>
+                <td><input type="number" class="area-val" value="0" oninput="calculateTotals()"></td>
+                <td><input type="number" class="rate-val" value="0" oninput="calculateTotals()"></td>
+                <td class="row-amt">0.00</td>
+            </tr>
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-add" onclick="addRow('workBody')">+ Add Work Item</button>
+
+    <!-- Payment Stages -->
+    <div class="section-title">PAYMENT STAGES / MILESTONES</div>
+    <table>
+        <thead>
+            <tr>
+                <th width="8%">Stage</th>
+                <th>Milestone Description</th>
+                <th width="15%">Area Type</th>
+                <th width="15%">Percentage (%)</th>
+                <th width="20%">Payable Amount (₹)</th>
+            </tr>
+        </thead>
+        <tbody id="milestoneBody">
+            <tr>
+                <td>1</td>
+                <td><input type="text" value="Elevation Completion"></td>
+                <td><input type="text" value="TOTAL"></td>
+                <td><input type="number" value="25" oninput="calculateTotals()"></td>
+                <td class="milestone-amt">0.00</td>
+            </tr>
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-add" onclick="addRow('milestoneBody')">+ Add Stage</button>
+
+    <!-- Scope and Terms -->
+    <div class="content-grid">
+        <div class="content-box">
+            <h4>Scope of Work</h4>
+            <div class="editable-area" contenteditable="true">
+                
+            </div>
+        </div>
+        <div class="content-box">
+            <h4>Basic Terms & Conditions</h4>
+            <div class="editable-area" id="specificTermsBox" contenteditable="true">
+                
+            </div>
+        </div>
+        <div class="content-box">
+            <h4>Payment Terms & Conditions</h4>
+            <div class="editable-area" id="paymentTermsBox" contenteditable="true">
+                
+            </div>
+        </div>
+        <div class="content-box">
+            <h4>Specific Terms & Conditions</h4>
+            <div class="editable-area" id="basicTermsBox" contenteditable="true">
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Signatures -->
+    <div class="signature-area">
+        <div class="sig-box">Authorized Signature</div>
+        <div class="sig-box">AGM Signature</div>
+        <div class="sig-box">COO Signature</div>
+        <div class="sig-box">Contractor Signature</div>
+    </div>
+
+    <div class="footer-address">
+        Correspondence Address: 2nd floor, Office No. 202, LIC Tower, Scheme No 54, Indore, MP 452010
+    </div>
+
+    <div class="screen-only print-hide" style="margin-top: 20px; display:flex; gap:10px; align-items:center; margin-left:5px;">
+        <button class="btn btn-add" onclick="reloadFromSheet()" style="background:#17a2b8;color:white;">Reload from Google Sheet</button>
+        <span id="reloadStatus" style="font-size:12px;color:#315165;">Sheet status: waiting</span>
+    </div>
+    <div class="actions">
+        <button class="btn btn-print" onclick="window.print()">Print</button>
+        <button class="btn btn-save" onclick="saveToLog()">Submit to Log</button>
+    </div>
+</div>
+
+<script>
+    // Published Google Apps Script web app URL.
+    // Expected GET response shape:
+    // { vendors:[...], sites:[...], woLog:{...} }
+    // Expected POST response shape:
+    // { success:true, message:"..." }
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJsm58Hzjc7ZKT9XmV5z2mk0BdQOUJIXkjG5RHC4zlgZizcM6JjnFScxIuuvBuI2rv/exec";
+
+    const EMPTY_SHEET_DATA = {
+        vendors: [],
+        sites: [],
+        woLog: [],
+        terms: {
+            specific: [],
+            payment: [],
+            basic: []
+        }
+    };
+
+    function normalizeWOLog(woLogRaw) {
+        let woLogRows = [];
+        if (Array.isArray(woLogRaw)) {
+            return woLogRaw.filter(row => row && typeof row === 'object');
+        }
+
+        if (woLogRaw && typeof woLogRaw === 'object') {
+            Object.entries(woLogRaw).forEach(([key, value]) => {
+                if (value && typeof value === 'object') {
+                    woLogRows.push(value);
+                    return;
+                }
+                if (value !== undefined && value !== null && value !== '') {
+                    woLogRows.push({
+                        Site: key.toString().trim(),
+                        'WO Number': value.toString().trim()
+                    });
+                }
+            });
+        }
+
+        return woLogRows;
+    }
+
+    function getVendorName(vendor) {
+        return (
+            vendor?.name ||
+            vendor?.Name ||
+            vendor?.['Vendor Name'] ||
+            vendor?.vendorName ||
+            vendor?.['Contractor Name'] ||
+            ''
+        ).toString().trim();
+    }
+
+    function getSiteName(site) {
+        return (
+            site?.name ||
+            site?.Name ||
+            site?.['Site Name'] ||
+            site?.siteName ||
+            site?.['Project Name'] ||
+            ''
+        ).toString().trim();
+    }
+
+    function getSiteCode(site) {
+        return getFirstValue(site, [
+            'Project Code',
+            'Site Code',
+            'siteCode',
+            'projectCode',
+            'Code',
+            'code',
+            'prefix',
+            'Prefix',
+            'G',
+            'g',
+            'col7',
+            'column7'
+        ]).toUpperCase();
+    }
+
+    function getSiteType(site) {
+        return getFirstValue(site, [
+            'Type',
+            'type',
+            'Site Type',
+            'siteType',
+            'Project Type',
+            'H',
+            'h',
+            'col8',
+            'column8'
+        ]).toUpperCase() || 'RESI';
+    }
+
+    function getFirstValue(record, keys) {
+        for (const key of keys) {
+            const value = record?.[key];
+            if (value !== undefined && value !== null && value !== '') {
+                return value.toString().trim();
+            }
+        }
+        return '';
+    }
+
+    function escapeHtml(value) {
+        return (value || '')
+            .toString()
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function linesToHtml(lines) {
+        return (Array.isArray(lines) ? lines : [])
+            .filter(line => line !== undefined && line !== null && line.toString().trim() !== '')
+            .map(line => escapeHtml(line).replace(/\n/g, '<br>'))
+            .join('<br>');
+    }
+
+    function normalizeTermsData(rawTerms) {
+        const terms = {
+            specific: [],
+            payment: [],
+            basic: []
+        };
+
+        if (Array.isArray(rawTerms)) {
+            rawTerms.forEach((row) => {
+                if (Array.isArray(row)) {
+                    const firstCell = (row[0] || '').toString().trim();
+                    const secondCell = (row[1] || '').toString().trim();
+                    const thirdCell = (row[2] || '').toString().trim();
+
+                    const looksLikeHeader =
+                        firstCell.toUpperCase() === 'TERMS & CONDITIONS' ||
+                        secondCell.toUpperCase() === 'PAYMENT TERM & CONDITIONS' ||
+                        thirdCell.toUpperCase() === 'BASIC TERM & CONDITIONS';
+
+                    if (looksLikeHeader) return;
+
+                    if (row[0]) terms.specific.push(row[0].toString().trim());
+                    if (row[1]) terms.payment.push(row[1].toString().trim());
+                    if (row[2]) terms.basic.push(row[2].toString().trim());
+                    return;
+                }
+
+                if (row && typeof row === 'object') {
+                    const specificTerm = getFirstValue(row, [
+                        'A',
+                        'a',
+                        'Specific Terms & Conditions',
+                        'Specific Terms',
+                        'specificTerms'
+                    ]);
+                    const paymentTerm = getFirstValue(row, [
+                        'B',
+                        'b',
+                        'Payment Terms & Conditions',
+                        'Payment Term & Conditions',
+                        'Payment Terms',
+                        'paymentTerms'
+                    ]);
+                    const basicTerm = getFirstValue(row, [
+                        'C',
+                        'c',
+                        'Terms & Conditions',
+                        'Basic Terms & Conditions',
+                        'Basic Term & Conditions',
+                        'Basic Terms',
+                        'basicTerms'
+                    ]);
+
+                    const looksLikeHeader =
+                        normalizeCompareValue(specificTerm) === 'TERMS & CONDITIONS' ||
+                        normalizeCompareValue(paymentTerm) === 'PAYMENT TERM & CONDITIONS' ||
+                        normalizeCompareValue(basicTerm) === 'BASIC TERM & CONDITIONS';
+
+                    if (looksLikeHeader) return;
+
+                    if (specificTerm) terms.specific.push(specificTerm);
+                    if (paymentTerm) terms.payment.push(paymentTerm);
+                    if (basicTerm) terms.basic.push(basicTerm);
+                }
+            });
+        } else if (rawTerms && typeof rawTerms === 'object') {
+            terms.specific = Array.isArray(rawTerms.specific) ? rawTerms.specific : [];
+            terms.payment = Array.isArray(rawTerms.payment) ? rawTerms.payment : [];
+            terms.basic = Array.isArray(rawTerms.basic) ? rawTerms.basic : [];
+        }
+
+        return terms;
+    }
+
+    function normalizeCompareValue(value) {
+        return (value || '').toString().trim().toUpperCase().replace(/\s+/g, ' ');
+    }
+
+    function extractPOSerial(poNumber) {
+        const match = (poNumber || '').toString().match(/PO(\d+)/i);
+        return match ? (parseInt(match[1], 10) || 0) : 0;
+    }
+
+    function getNextPOSerial(siteName, projectCode) {
+        const selectedSite = normalizeCompareValue(siteName);
+        const selectedProjectCode = normalizeCompareValue(projectCode).replace(/\s+/g, '-');
+        const rows = Array.isArray(window.gsheetWOLog) ? window.gsheetWOLog : [];
+        let maxSerial = 0;
+
+        rows.forEach(row => {
+            const rowSite = normalizeCompareValue(getFirstValue(row, ['Site', 'site', 'Site Name', 'siteName', 'Project Name']));
+            const rowProjectCode = normalizeCompareValue(getFirstValue(row, ['Project Code', 'Site Code', 'projectCode', 'siteCode'])).replace(/\s+/g, '-');
+            const rowPONumber = getFirstValue(row, ['PO Number', 'poNumber', 'po_no', 'PONumber', 'WO Number', 'woNumber', 'wo_no', 'WONumber']);
+            const poText = rowPONumber.toUpperCase();
+
+            const sameSite = selectedSite && rowSite === selectedSite;
+            const sameProject = selectedProjectCode && (rowProjectCode === selectedProjectCode || poText.includes(`/${selectedProjectCode}/`) || poText.startsWith(`${selectedProjectCode}/PO`));
+
+            if (!sameSite && !sameProject) return;
+
+            maxSerial = Math.max(maxSerial, extractPOSerial(rowPONumber));
+        });
+
+        return maxSerial + 1;
+    }
+
+    function normalizeSheetData(data) {
+        const payload = data?.data && typeof data.data === 'object' ? data.data : data;
+        return {
+            vendors: Array.isArray(payload?.vendors)
+                ? payload.vendors
+                : Array.isArray(payload?.vendorData)
+                    ? payload.vendorData
+                    : Array.isArray(payload?.contractors)
+                        ? payload.contractors
+                        : [],
+            sites: Array.isArray(payload?.sites)
+                ? payload.sites
+                : Array.isArray(payload?.siteData)
+                    ? payload.siteData
+                    : Array.isArray(payload?.projects)
+                        ? payload.projects
+                        : [],
+            woLog: normalizeWOLog(payload?.woLog || payload?.woLogs || payload?.workOrders || payload?.log),
+            terms: normalizeTermsData(payload?.terms || payload?.termsConditions || payload?.termsAndConditions || payload?.['Terms & Conditions'])
+        };
+    }
+
+    async function loadSheetData() {
+        if (!APPS_SCRIPT_URL || !APPS_SCRIPT_URL.startsWith("https://script.google.com/")) {
+            throw new Error("Google Apps Script URL is missing or invalid.");
+        }
+
+        const url = new URL(APPS_SCRIPT_URL);
+        url.searchParams.set('action', 'getData');
+
+        const res = await fetch(url.toString(), { method: 'GET', cache: 'no-store' });
+        if (!res.ok) {
+            throw new Error(`Unable to load sheet data (${res.status} ${res.statusText})`);
+        }
+
+        const data = await res.json();
+        return normalizeSheetData(data);
+    }
+
+    function populateData(sheetData) {
+        const vSelect = document.getElementById('vendorSelect');
+        const sSelect = document.getElementById('siteSelect');
+        const specificTermsBox = document.getElementById('specificTermsBox');
+        const paymentTermsBox = document.getElementById('paymentTermsBox');
+        const basicTermsBox = document.getElementById('basicTermsBox');
+
+        // preserve default option
+        vSelect.innerHTML = '<option value="">-- Select Vendor --</option>';
+        sSelect.innerHTML = '<option value="">-- Select Site --</option>';
+
+        sheetData.vendors.forEach(v => {
+            const vendorName = getVendorName(v);
+            if (!vendorName) return;
+            const opt = document.createElement('option');
+            opt.value = vendorName;
+            opt.textContent = vendorName;
+            vSelect.appendChild(opt);
+        });
+
+        sheetData.sites.forEach(s => {
+            const siteName = getSiteName(s);
+            if (!siteName) return;
+            const opt = document.createElement('option');
+            opt.value = siteName;
+            opt.textContent = siteName;
+            sSelect.appendChild(opt);
+        });
+
+        window.gsheetData = sheetData;
+        window.gsheetWOLog = sheetData.woLog || [];
+        if (specificTermsBox) specificTermsBox.innerHTML = linesToHtml(sheetData.terms?.specific || []);
+        if (paymentTermsBox) paymentTermsBox.innerHTML = linesToHtml(sheetData.terms?.payment || []);
+        if (basicTermsBox) basicTermsBox.innerHTML = linesToHtml(sheetData.terms?.basic || []);
+    }
+
+    window.onload = async () => {
+        const today = new Date();
+        const dateStr = today.toISOString().split('T')[0].split('-').reverse().join('/');
+        document.getElementById('woDate').value = dateStr;
+        document.getElementById('woDatePrint').textContent = dateStr;
+        document.getElementById('woNoPrint').textContent = document.getElementById('displayWONo').textContent || '';
+        const statusEl = document.getElementById('reloadStatus');
+
+        try {
+            const sheetData = await loadSheetData();
+            populateData(sheetData);
+            statusEl.textContent = `Google Sheet connected. Vendors: ${sheetData.vendors.length}, Sites: ${sheetData.sites.length}`;
+        } catch (err) {
+            console.error('Initial Google Sheet load failed', err);
+            populateData(EMPTY_SHEET_DATA);
+            statusEl.textContent = `Sheet load failed: ${err.message}`;
+        }
+    };
+
+    window.addEventListener('beforeprint', () => {
+        document.getElementById('woDatePrint').textContent = document.getElementById('woDate').value || '';
+        document.getElementById('woNoPrint').textContent = document.getElementById('displayWONo').textContent || '';
+    });
+
+    function autoFillVendor() {
+        const name = document.getElementById('vendorSelect').value;
+        const vendor = (window.gsheetData?.vendors || []).find(v => getVendorName(v) === name);
+        if (vendor) {
+            document.getElementById('vCode').value = getFirstValue(vendor, ['Code', 'code', 'Vendor Code', 'Contractor Code', 'Vendor ID']);
+            document.getElementById('vAadhar').value = getFirstValue(vendor, ['Aadhar No.', 'Aadhar No', 'Aadhaar No', 'Aadhaar Number', 'aadhar', 'aadhaar']);
+            document.getElementById('vPan').value = getFirstValue(vendor, ['PAN No.', 'PAN No', 'Pan No', 'pan', 'PAN']);
+            document.getElementById('vGst').value = getFirstValue(vendor, ['GST No.', 'GST No', 'GSTIN', 'gst', 'GST']);
+        } else {
+            document.getElementById('vCode').value = "";
+            document.getElementById('vAadhar').value = "";
+            document.getElementById('vPan').value = "";
+            document.getElementById('vGst').value = "";
+        }
+    }
+
+    function autoFillSite() {
+        const name = document.getElementById('siteSelect').value;
+        const site = (window.gsheetData?.sites || []).find(s => getSiteName(s) === name);
+        if (site) {
+            document.getElementById('sDelivered').value = getFirstValue(site, ['Address', 'address', 'Site Address', 'Project Address', 'Delivered To', 'deliveredTo', 'Delivery To', 'Delivery Name', 'Receiver Name']);
+            document.getElementById('sContact').value = getFirstValue(site, ['Contact Person', 'contactPerson', 'Person Name', 'Contact Name', 'Site Contact', 'siteContact', 'Engineer Name', 'Site Engineer']);
+            document.getElementById('sEngineer').value = getFirstValue(site, ['Mo. No.', 'Mo No', 'mo1', 'Mobile No.', 'Mobile No', 'Mobile Number', 'Mobile', 'Phone', 'Phone No', 'Phone Number', 'Contact No', 'Contact Number', 'contactNo', 'contactNumber']);
+            const projectCode = getSiteCode(site);
+            const type = getSiteType(site);
+            if (projectCode) generateWONo(type, projectCode, name);
+            else document.getElementById('displayWONo').textContent = `${type}/SITE-CODE-MISSING/PO1/${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`;
+        } else {
+            document.getElementById('sDelivered').value = "";
+            document.getElementById('sContact').value = "";
+            document.getElementById('sEngineer').value = "";
+        }
+    }
+
+    function generateWONo(type, projectCode, siteName) {
+        const cleanType = (type || 'RESI').toString().trim().toUpperCase();
+        const cleanProject = (projectCode || 'SD').toString().trim().toUpperCase().replace(/\s+/g, '-');
+        const nextSerial = getNextPOSerial(siteName, cleanProject);
+        const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const woNo = `${cleanType}/${cleanProject}/PO${nextSerial}/${datePart}`;
+        document.getElementById('displayWONo').textContent = woNo;
+    }
+
+    function addRow(id) {
+        const tbody = document.getElementById(id);
+        const row = document.createElement('tr');
+        const count = tbody.rows.length + 1;
+        if (id === 'workBody') {
+            row.innerHTML = `<td>${count}</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="number" class="area-val" oninput="calculateTotals()"></td><td><input type="number" class="rate-val" oninput="calculateTotals()"></td><td class="row-amt">0.00</td>`;
+        } else {
+            row.innerHTML = `<td>${count}</td><td><input type="text"></td><td><input type="text" value="TOTAL"></td><td><input type="number" oninput="calculateTotals()"></td><td class="milestone-amt">0.00</td>`;
+        }
+        tbody.appendChild(row);
+    }
+
+    function calculateTotals() {
+        let grandTotal = 0;
+        document.querySelectorAll('#workBody tr').forEach(row => {
+            const a = parseFloat(row.querySelector('.area-val').value) || 0;
+            const r = parseFloat(row.querySelector('.rate-val').value) || 0;
+            const t = a * r;
+            row.querySelector('.row-amt').textContent = t.toFixed(2);
+            grandTotal += t;
+        });
+
+        document.querySelectorAll('#milestoneBody tr').forEach(row => {
+            const p = parseFloat(row.querySelector('input[type="number"]').value) || 0;
+            row.querySelector('.milestone-amt').textContent = ((grandTotal * p) / 100).toFixed(2);
+        });
+    }
+
+    async function reloadFromSheet() {
+        const statusEl = document.getElementById('reloadStatus');
+        statusEl.textContent = 'Reloading sheet data...';
+        try {
+            const sheetData = await loadSheetData();
+            populateData(sheetData);
+            statusEl.textContent = `Google Sheet refreshed. Vendors: ${sheetData.vendors.length}, Sites: ${sheetData.sites.length}`;
+        } catch (err) {
+            statusEl.textContent = `Reload failed: ${err.message}`;
+            console.error(err);
+        }
+    }
+
+    function promptPdfDownload(recordNumber) {
+        const wantsPdf = window.confirm(`${recordNumber} saved to WO_Log successfully.\n\nDo you want to download this page as PDF now?`);
+        if (wantsPdf) {
+            window.print();
+        }
+    }
+
+    async function saveToLog() {
+        const woNo = document.getElementById('displayWONo').textContent;
+        const siteName = document.getElementById('siteSelect').value;
+        const contractor = document.getElementById('vendorSelect').value;
+        const amount = (function(){
+            let total=0;
+            document.querySelectorAll('#workBody tr').forEach(row=>{
+                const a=parseFloat(row.querySelector('.area-val')?.value||0)||0;
+                const r=parseFloat(row.querySelector('.rate-val')?.value||0)||0;
+                total+=a*r;
+            });
+            return total;
+        })();
+        const payload = {
+            action: 'saveWorkOrder',
+            site: siteName,
+            woNumber: woNo,
+            contractor: contractor,
+            amount: amount,
+            workType: document.getElementById('workType').value || "",
+            woDate: document.getElementById('woDate').value || "",
+            pdfLink: "",
+            createdBy: "webform",
+            sheet: "WO_Format",
+            timestamp: new Date().toLocaleString()
+        };
+
+        try {
+            if (!APPS_SCRIPT_URL || !APPS_SCRIPT_URL.startsWith("https://script.google.com/")) {
+                throw new Error('Google Apps Script URL is missing or invalid.');
+            }
+
+            const formBody = new URLSearchParams();
+            Object.entries(payload).forEach(([key, value]) => {
+                formBody.append(key, value ?? '');
+            });
+
+            const res = await fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: formBody
+            });
+            const rawText = await res.text();
+            let data = {};
+
+            try {
+                data = rawText ? JSON.parse(rawText) : {};
+            } catch (parseError) {
+                throw new Error(`Unexpected response from Google Sheet: ${rawText || 'empty response'}`);
+            }
+
+            if (!res.ok || data.success === false) throw new Error(data.error || data.message || 'Submit failed');
+            document.getElementById('reloadStatus').textContent = 'WO saved successfully.';
+            await reloadFromSheet();
+            promptPdfDownload(woNo);
+        } catch (err) {
+            console.error('Save failed', err);
+            alert('Save failed: ' + err.message);
+            document.getElementById('reloadStatus').textContent = 'Save failed.';
+        }
+    }
+</script>
+
+</body>
+</html>
