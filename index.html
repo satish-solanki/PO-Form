@@ -376,6 +376,7 @@
             <div class="form-row"><label>Aadhar No:</label><input type="text" id="vAadhar" readonly></div>
             <div class="form-row"><label>PAN No:</label><input type="text" id="vPan" readonly></div>
             <div class="form-row"><label>GST No:</label><input type="text" id="vGst" readonly></div>
+            <div class="form-row"><label>Contractor Type:</label><input type="text" id="vType" readonly>
         </div>
         <div class="info-block">
             <h3>SITE & DELIVERY DETAILS</h3>
@@ -822,21 +823,30 @@
     });
 
     function autoFillVendor() {
-        const name = document.getElementById('vendorSelect').value;
-        const vendor = (window.gsheetData?.vendors || []).find(v => getVendorName(v) === name);
-        if (vendor) {
-            document.getElementById('vCode').value = getFirstValue(vendor, ['Code', 'code', 'Vendor Code', 'Contractor Code', 'Vendor ID']);
-            document.getElementById('vAadhar').value = getFirstValue(vendor, ['Aadhar No.', 'Aadhar No', 'Aadhaar No', 'Aadhaar Number', 'aadhar', 'aadhaar']);
-            document.getElementById('vPan').value = getFirstValue(vendor, ['PAN No.', 'PAN No', 'Pan No', 'pan', 'PAN']);
-            document.getElementById('vGst').value = getFirstValue(vendor, ['GST No.', 'GST No', 'GSTIN', 'gst', 'GST']);
-        } else {
-            document.getElementById('vCode').value = "";
-            document.getElementById('vAadhar').value = "";
-            document.getElementById('vPan').value = "";
-            document.getElementById('vGst').value = "";
-        }
-    }
+    const name = document.getElementById('vendorSelect').value;
+    const vendor = (window.gsheetData?.vendors || []).find(v => getVendorName(v) === name);
 
+    if (vendor) {
+        document.getElementById('vCode').value = getFirstValue(vendor, ['Code', 'code', 'Vendor Code', 'Contractor Code', 'Vendor ID']);
+        document.getElementById('vAadhar').value = getFirstValue(vendor, ['Aadhar No.', 'Aadhar No', 'Aadhaar No', 'Aadhaar Number', 'aadhar', 'aadhaar']);
+        document.getElementById('vPan').value = getFirstValue(vendor, ['PAN No.', 'PAN No', 'Pan No', 'pan', 'PAN']);
+        document.getElementById('vGst').value = getFirstValue(vendor, ['GST No.', 'GST No', 'GSTIN', 'gst', 'GST']);
+
+        document.getElementById('vType').value = getFirstValue(vendor, [
+            'Contractor Type',
+            'contractorType',
+            'Vendor Type',
+            'Type'
+        ]);
+
+    } else {
+        document.getElementById('vCode').value = "";
+        document.getElementById('vAadhar').value = "";
+        document.getElementById('vPan').value = "";
+        document.getElementById('vGst').value = "";
+        document.getElementById('vType').value = "";
+    }
+}
     function autoFillSite() {
         const name = document.getElementById('siteSelect').value;
         const site = (window.gsheetData?.sites || []).find(s => getSiteName(s) === name);
