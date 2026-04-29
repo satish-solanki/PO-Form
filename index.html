@@ -400,7 +400,7 @@ text-align: left;
 <th width="5%">S.N.</th>
 <th>Floor/Location</th>
 <th>Details of Work</th>
-<th width="12%">Area/Quantity</th>
+<th width="12%">Quantity</th>
 <th width="8%">Unit</th>
 <th width="12%">Rate (₹)</th>
 <th width="15%">Amount (₹)</th>
@@ -409,10 +409,27 @@ text-align: left;
 <tbody id="workBody">
 <tr>
 <td>1</td>
-<td><input type="text" value="EXTERNAL PLASTER"></td>
-<td><input type="text" value="soft"></td>
-<td><input type="text" value="sqft"></td>
+<td><input type="text" value=""></td>
+<td><input type="text" value=""></td>
+            
 <td><input type="number" class="area-val" value="0" oninput="calculateTotals()"></td>
+<td>
+  <select>
+    <option value="sqft">Square Feet (sqft)</option>
+    <option value="sqm">Square Meter (sqm)</option>
+    <option value="cft">Cubic Feet (cft)</option>
+    <option value="cum">Cubic Meter (cum)</option>
+    <option value="rmt">Running Meter (rmt)</option>
+    <option value="kg">Kilogram (kg)</option>
+    <option value="mt">Metric Ton (MT)</option>
+    <option value="nos">Numbers (Nos)</option>
+    <option value="day">Day</option>
+    <option value="hr">Hour</option>
+    <option value="lot">Lot</option>
+    <option value="job">Job Work</option>
+  </select>
+</td>
+
 <td><input type="number" class="rate-val" value="0" oninput="calculateTotals()"></td>
 <td class="row-amt">0.00</td>
 </tr>
